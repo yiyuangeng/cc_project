@@ -25,7 +25,8 @@ SECRET_KEY = 'i8e1s3!_(fjsiv%1pn3sb3o=s)!p*nzwh1$gp5-l&%nb!d=y_s'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['52.49.142.76',
+'ec2-52-49-142-76.eu-west-1.compute.amazonaws.com','127.0.0.1']
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 # Application definition
