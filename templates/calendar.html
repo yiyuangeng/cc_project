@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="clearfix">
+    <span class="left m-2" style="font-size: 20px;">Wellcome, {{ request.user }}</span>
+    <a class="btn btn-info right" href="{% url 'logout' %}"> Logout </a>
+	<a class="btn btn-info right mr-2" href="{% url 'calendarapp:calendar' %}?{{ next_month }} "> Next Month >> </a>
+    <a class="btn btn-info right mr-2" href="{% url 'calendarapp:calendar' %}?{{ prev_month }}"> << Previous Month </a>
+    <a class="btn btn-info right mr-2" href="{% url 'calendarapp:event_new' %}"> + New Event </a>
+</div>
+<div class="search-container btn btn-info right">
+    <form action="/search-event" method="post">
+        {% csrf_token %}
+      <input type="text" placeholder="Search title.." name="title">
+      <button type="submit"><i class="fa fa-search"></i></button>
+    </form>
+</div>
+<div style="color: blueviolet;">
+    {{ calendar }}
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}
