@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta
 from calendar import HTMLCalendar
 from .models import Event
-from caldjango.helper import get_current_user
+# from caldjango.helper import get_current_user
 from django.contrib.sessions.models import Session
 from django.utils import timezone
 from django.contrib.auth.models import User
