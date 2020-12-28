@@ -3,21 +3,33 @@
 {% block title %} Register {% endblock %}
 
 {% block content %}
-  <h2>Register</h2>
-  <form method="post">
-    {% csrf_token %}
-    {% for field in form %}
-      <p>
-        {{ field.label_tag }}<br>
-        {{ field }}
-        {% if field.help_text %}
-          <small style="color: grey">{{ field.help_text }}</small>
-        {% endif %}
-        {% for error in field.errors %}
-          <p style="color: red">{{ error }}</p>
-        {% endfor %}
-      </p>
-    {% endfor %}
-    <button type="submit">Register</button>
-  </form>
+<section class="container-fluid bg">
+    <section class = "row justify-content-center">
+      <section class = "col-12 col-sm-6 col-md-3">
+                    
+                      <form method="post" class="form-signin">
+                        <h2>Sign up</h2>
+                        {% csrf_token %}
+                        {% for field in form %}
+                          <p>
+                            {{ field.label_tag }}
+                            {{ field }}
+                            
+                            {% for error in field.errors %}
+                              <p style="color: red">{{ error }}</p>
+                            {% endfor %}
+                          </p>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary mt-2 btn-block">Sign up</button>
+                        <br>
+                        <br>
+                        <span>Already have an account? Click here to
+                          <a href="{% url 'signin' %}"> Sign in </a>
+                        </span>
+                      </form>
+
+      </section>
+    </section>
+</section>
+  
 {% endblock %}
