@@ -21,13 +21,14 @@ from .models import *
 from .utils import Calendar
 from .forms import EventForm, AddMemberForm
 
-@login_required(login_url='signin')
-def index(request):
-    return HttpResponse('hello')
+# @login_required(login_url='signin')
+# def index(request):
+#     return HttpResponse('hello')
 
-def get_date(req_day):
-    if req_day:
-        year, month = (int(x) for x in req_day.split('-'))
+def get_date(day):
+    if day:
+        print(day.split('-'))
+        year, month = (int(x) for x in day.split('-'))
         return date(year, month, day=1)
     return datetime.today()
 

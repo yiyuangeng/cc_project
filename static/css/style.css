@@ -1,23 +1,28 @@
 .calendar {
-    width: 98%;
+    /* width: 100%; */
     margin: auto;
+    /* height: 55%; */
     font-size: 13px;
   }
   
   .calendar tr, .calendar td {
-    border: 1px solid black;
+    border: 1px solid green;
+    border-radius: 5px !important;
+    
   }
   
   .calendar th {
     padding: 10px;
     text-align: center;
     font-size: 18px;
+    /* border-radius: 5px; */
   }
   
   .calendar td {
-    width: 200px;
-    height: 150px;
+    width: 150px;
+    height: 70px;
     padding: 20px 0px 0px 5px;
+    /* border-radius: 5px; */
   }
   
   .month {
@@ -34,7 +39,7 @@
   }
   
   a {
-    color: #17a2b8;
+    color: #77e6a0;
   }
 
   .left {
@@ -62,7 +67,7 @@
   
   .form input, .form select, .form textarea {
     border-radius: 5px;
-    border: 1px solid #17a2b8;
+    border: 1px solid black;
     outline: none;
     background: none;
     padding: 5px;

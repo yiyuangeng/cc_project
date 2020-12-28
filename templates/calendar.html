@@ -1,28 +1,43 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="clearfix">
-    <span class="left m-2" style="font-size: 20px;">Wellcome, {{ request.user }}</span>
-    <a class="btn btn-info right" href="{% url 'logout' %}"> Logout </a>
-	<a class="btn btn-info right mr-2" href="{% url 'calendarapp:calendar' %}?{{ next_month }} "> Next Month >> </a>
-    <a class="btn btn-info right mr-2" href="{% url 'calendarapp:calendar' %}?{{ prev_month }}"> << Previous Month </a>
-    <a class="btn btn-info right mr-2" href="{% url 'calendarapp:event_new' %}"> + New Event </a>
-</div>
-<div class="search-container btn btn-info right">
-    <form action="/search-event" method="post">
-        {% csrf_token %}
-      <input type="text" placeholder="Search title.." name="title">
-      <button type="submit"><i class="fa fa-search"></i></button>
-    </form>
-</div>
-<div style="color: blueviolet;">
-    {{ calendar }}
-</div>
+<!-- <div style="background: url(/static/css/cal2.jpg)no-repeat;width: 100%;
+height: 100vh;
+background-size: 100%;"> -->
+<div class="bg">
+<br>
+<div style="color:#095927; " >
+    <!-- <div style="background-color:rgba(255,255,255,0.5);"> -->
+        <div class="clearfix">
+            
+            <a class="btn btn2 left mr-2" href="{% url 'calendarapp:event_new' %}"> + </a>
+            <a class="btn btn2 left mr-2" href="{% url 'calendarapp:calendar' %}?{{ prev_month }}"> <<  </a>
+            <a class="btn btn2 left mr-2" href="{% url 'calendarapp:calendar' %}?{{ next_month }} "> >> </a>
+            <a class="btn btn2 left mr-2" href="{% url 'logout' %}"> Logout </a>
+            
+            <div class="search-container btn btn btn2 left">
+                <form action="/search-event" method="post">
+                    {% csrf_token %}
+                <input type="text" placeholder="Find .." name="title">
+                <button type="submit"><i class="fa fa-search"></i></button>
+                </form>
+            </div>
+
+            <span class="right m-2" style="font-size: 50px; font: sans-serif;">{{ request.user }}</span>
+        </div>
+    <!-- </div> -->
+        <div style="background-color:rgba(255,255,255,0.5);  ">
+            <div style="color:  #095927; border-radius: 5px; " >
+                {{ calendar }}
+            </div>
+        <!-- </div> -->
 
 {% if messages %}
     {% for message in messages %}
         <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
     {% endfor %}
 {% endif %}
+</div>
+</div>
 
 {% endblock %}
