@@ -16,7 +16,7 @@ background-size: 100%;"> -->
             <a class="btn btn2 left mr-2" href="{% url 'logout' %}"> Logout </a>
             
             <div class="search-container btn btn btn2 left">
-                <form action="/search-event" method="post">
+                <form action="/search_event" method="post">
                     {% csrf_token %}
                 <input type="text" placeholder="Find .." name="title">
                 <button type="submit"><i class="fa fa-search"></i></button>

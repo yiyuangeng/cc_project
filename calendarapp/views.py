@@ -91,7 +91,7 @@ def event_details(request, event_id):
         'event': event,
         'eventmember': eventmember
     }
-    return render(request, 'event-details.html', context)
+    return render(request, 'event_detail.html', context)
 
 
 def add_eventmember(request, event_id):
@@ -143,7 +143,7 @@ def searchEvent(request):
                  'event': event,
                 'eventmember': eventmember
             }
-            return render(request, 'search-event.html', context)
+            return render(request, 'search_event.html', context)
         except:
             messages.success(request, 'Nothing to match.')
             return redirect('calendarapp:calendar')
