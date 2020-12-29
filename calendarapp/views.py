@@ -1,4 +1,4 @@
-# cal/views.py
+
 
 from datetime import datetime, date
 from django.shortcuts import render, redirect
@@ -19,7 +19,7 @@ from django.db.models import Q
 
 from .models import *
 from .utils import Calendar
-from .forms import EventForm, AddMemberForm
+from .forms import EventForm, EventMemberForm
 
 # @login_required(login_url='signin')
 # def index(request):
@@ -27,21 +27,25 @@ from .forms import EventForm, AddMemberForm
 
 def get_date(day):
     if day:
-        print(day.split('-'))
-        year, month = (int(x) for x in day.split('-'))
-        return date(year, month, day=1)
-    return datetime.today()
+        time_list = day.split('-')
+        year = int(time_list[0])
+        month = int(time_list[1])
+        day = 1
+        return date(year, month, day)
+    else:
+        return datetime.today()
 
-def prev_month(d):
-    first = d.replace(day=1)
-    prev_month = first - timedelta(days=1)
-    month = 'month=' + str(prev_month.year) + '-' + str(prev_month.month)
+def get_last_month(a):
+    first_day = a.replace(day=1)  #the first day of current month
+    
+    last_month = first_day + timedelta(days=-1) 
+    month = 'month=' + str(last_month.year) + '-' + str(last_month.month)
     return month
 
-def next_month(d):
-    days_in_month = calendar.monthrange(d.year, d.month)[1]
-    last = d.replace(day=days_in_month)
-    next_month = last + timedelta(days=1)
+def get_next_month(a):
+    days_in_month = calendar.monthrange(a.year, a.month)[1]
+    last_day= a.replace(day=days_in_month)
+    next_month = last_day + timedelta(days=1)
     month = 'month=' + str(next_month.year) + '-' + str(next_month.month)
     return month
 
@@ -56,22 +60,23 @@ class CalendarView(LoginRequiredMixin, generic.ListView):
         cal = Calendar(d.year, d.month)
         html_cal = cal.formatmonth(withyear=True)
         context['calendar'] = mark_safe(html_cal)
-        context['prev_month'] = prev_month(d)
-        context['next_month'] = next_month(d)
+        context['prev_month'] = get_last_month(d)
+        context['next_month'] = get_next_month(d)
         return context
+    
 
 @login_required(login_url='signin')
 def create_event(request):    
     form = EventForm(request.POST or None)
     if request.POST and form.is_valid():
         title = form.cleaned_data['title']
-        description = form.cleaned_data['description']
+        desc = form.cleaned_data['desc']
         start_time = form.cleaned_data['start_time']
         end_time = form.cleaned_data['end_time']
         Event.objects.get_or_create(
             user=request.user,
             title=title,
-            description=description,
+            desc=desc,
             start_time=start_time,
             end_time=end_time
         )
@@ -80,7 +85,7 @@ def create_event(request):
 
 class EventEdit(generic.UpdateView):
     model = Event
-    fields = ['title', 'description', 'start_time', 'end_time']
+    fields = ['title', 'desc', 'start_time', 'end_time']
     template_name = 'event.html'
 
 @login_required(login_url='signin')
@@ -95,9 +100,9 @@ def event_details(request, event_id):
 
 
 def add_eventmember(request, event_id):
-    forms = AddMemberForm()
+    forms = EventMemberForm()
     if request.method == 'POST':
-        forms = AddMemberForm(request.POST)
+        forms = EventMemberForm(request.POST)
         if forms.is_valid():
             # try:
                 # member = EventMember.objects.filter(event=event_id)
@@ -140,7 +145,7 @@ def searchEvent(request):
             event = Event.objects.get(user_id = user_id, title=title)
             eventmember = EventMember.objects.filter(event=event)
             context = {
-                 'event': event,
+                'event': event,
                 'eventmember': eventmember
             }
             return render(request, 'search_event.html', context)
