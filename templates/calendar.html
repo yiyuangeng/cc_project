@@ -11,7 +11,7 @@ background-size: 100%;"> -->
         <div class="clearfix">
             
             <a class="btn btn2 left mr-2" href="{% url 'calendarapp:event_new' %}"> + </a>
-            <a class="btn btn2 left mr-2" href="{% url 'calendarapp:calendar' %}?{{ prev_month }}"> <<  </a>
+            <a class="btn btn2 left mr-2" href="{% url 'calendarapp:calendar' %}?{{ last_month }}"> <<  </a>
             <a class="btn btn2 left mr-2" href="{% url 'calendarapp:calendar' %}?{{ next_month }} "> >> </a>
             <a class="btn btn2 left mr-2" href="{% url 'logout' %}"> Logout </a>
             

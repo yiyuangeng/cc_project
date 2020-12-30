@@ -21,9 +21,6 @@ from .models import *
 from .utils import Calendar
 from .forms import EventForm, EventMemberForm
 
-# @login_required(login_url='signin')
-# def index(request):
-#     return HttpResponse('hello')
 
 def get_date(day):
     if day:
@@ -43,7 +40,7 @@ def get_last_month(a):
     return month
 
 def get_next_month(a):
-    days_in_month = calendar.monthrange(a.year, a.month)[1]
+    days_in_month = calendar.monthrange(a.year, a.month)[1]  #the last day of current month
     last_day= a.replace(day=days_in_month)
     next_month = last_day + timedelta(days=1)
     month = 'month=' + str(next_month.year) + '-' + str(next_month.month)
@@ -60,12 +57,12 @@ class CalendarView(LoginRequiredMixin, generic.ListView):
         cal = Calendar(d.year, d.month)
         html_cal = cal.formatmonth(withyear=True)
         context['calendar'] = mark_safe(html_cal)
-        context['prev_month'] = get_last_month(d)
+        context['last_month'] = get_last_month(d)
         context['next_month'] = get_next_month(d)
         return context
     
 
-@login_required(login_url='signin')
+
 def create_event(request):    
     form = EventForm(request.POST or None)
     if request.POST and form.is_valid():
@@ -83,12 +80,9 @@ def create_event(request):
         return HttpResponseRedirect(reverse('calendarapp:calendar'))
     return render(request, 'event.html', {'form': form})
 
-class EventEdit(generic.UpdateView):
-    model = Event
-    fields = ['title', 'desc', 'start_time', 'end_time']
-    template_name = 'event.html'
 
-@login_required(login_url='signin')
+
+
 def event_details(request, event_id):
     event = Event.objects.get(id=event_id)
     eventmember = EventMember.objects.filter(event=event)
@@ -109,21 +103,28 @@ def add_eventmember(request, event_id):
             event = Event.objects.get(id=event_id)
             user = forms.cleaned_data['user']
             user_id = request.POST['user']
+
+            print(user)
+            print(user_id)
             if EventMember.objects.filter(Q(user_id=user_id) & Q(event_id=event_id)):
-                messages.success(request, 'Dupilicated user')
-                return redirect('calendarapp:calendar')
+                messages.success(request, 'Cannot add duplicate user')
+                # return redirect('calendarapp:calendar')
             else:
                 EventMember.objects.create(event=event,user=user)
-            #     EventMember.objects.create(event=event,user=user)
-            #     messages.add_message(request, messages.SUCCESS, 'Member added successfully')
-            #     return redirect('calendarapp:calendar')
-            # except:
-            #     messages.add_message(request, messages.SUCCESS, 'Member already added')
-                return redirect('calendarapp:calendar')
+                messages.success(request, 'Add user sucessfully')
+            return redirect('calendarapp:calendar')
+            
     context = {
         'form': forms
     }
     return render(request, 'add_member.html', context)
+
+
+class EventEdit(generic.UpdateView):
+    model = Event
+    fields = ['title', 'desc', 'start_time', 'end_time']
+    template_name = 'event.html'
+
 
 class EventMemberDeleteView(generic.DeleteView):
     model = EventMember
@@ -136,7 +137,7 @@ class EventDeleteView(generic.DeleteView):
     template_name = 'event_delete.html'
     success_url = reverse_lazy('calendarapp:calendar')
 
-@login_required
+
 def searchEvent(request):
     if request.method == 'POST':
         title = request.POST['title']

@@ -9,16 +9,16 @@ from django.contrib.auth.forms import UserCreationForm
 def signin(request):
     forms = SigninForm()
     if request.method == 'POST':
-        print("ccc")
+        # print("ccc")
         forms = SigninForm(request.POST)
         if forms.is_valid():
             username = forms.cleaned_data['username']
             password = forms.cleaned_data['password']
             user = authenticate(username=username, password=password)
-            print("aaa")
+            # print("aaa")
             if user:
                 login(request, user)
-                print("bbb")
+                # print("bbb")
                 return redirect('calendarapp:calendar')
     context = {'form': forms}
     return render(request, 'signin.html', context)
