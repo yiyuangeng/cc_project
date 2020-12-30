@@ -1,5 +1,3 @@
-
-
 from datetime import datetime, date
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
@@ -13,13 +11,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.contrib import messages
-from .utils import get_current_userid
 from django.db.models import Q
 
 
 from .models import *
 from .utils import Calendar
 from .forms import EventForm, EventMemberForm
+from django.contrib.sessions.models import Session
+from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 def get_date(day):
@@ -137,6 +137,15 @@ class EventDeleteView(generic.DeleteView):
     template_name = 'event_delete.html'
     success_url = reverse_lazy('calendarapp:calendar')
 
+
+def get_current_userid():
+	active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
+	user_id_list = []
+	for session in active_sessions:
+		data = session.get_decoded()
+		user_id_list.append(data.get('_auth_user_id', None))
+	userid = user_id_list[-1]
+	return userid
 
 def searchEvent(request):
     if request.method == 'POST':
