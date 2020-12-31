@@ -138,21 +138,15 @@ class EventDeleteView(generic.DeleteView):
     success_url = reverse_lazy('calendarapp:calendar')
 
 
-def get_current_userid():
-	active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
-	user_id_list = []
-	for session in active_sessions:
-		data = session.get_decoded()
-		user_id_list.append(data.get('_auth_user_id', None))
-	userid = user_id_list[-1]
-	return userid
 
 def searchEvent(request):
     if request.method == 'POST':
         title = request.POST['title']
-        user_id=get_current_userid()
+        print(title)
+        # user_id=get_current_userid()
         try:
-            event = Event.objects.get(user_id = user_id, title=title)
+            # event = Event.objects.get(user_id = user_id, title=title)
+            event = Event.objects.get(title=title)
             eventmember = EventMember.objects.filter(event=event)
             context = {
                 'event': event,
@@ -160,6 +154,6 @@ def searchEvent(request):
             }
             return render(request, 'search_event.html', context)
         except:
-            messages.success(request, 'Nothing to match.')
+            messages.success(request, 'Cannot find the  task')
             return redirect('calendarapp:calendar')
     return redirect('calendarapp:calendar')
